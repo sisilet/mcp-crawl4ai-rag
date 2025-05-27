@@ -1,3 +1,7 @@
+# Crawl4AI RAG MCP Server
+
+[![Tests](https://github.com/sisilet/mcp-crawl4ai-rag/actions/workflows/test.yml/badge.svg)](https://github.com/sisilet/mcp-crawl4ai-rag/actions/workflows/test.yml)
+
 <h1 align="center">Crawl4AI RAG MCP Server</h1>
 
 <p align="center">
