@@ -4,6 +4,7 @@ Pytest configuration and shared fixtures for MCP server tests.
 
 import asyncio
 import os
+
 # Add src to path for imports
 import sys
 from pathlib import Path

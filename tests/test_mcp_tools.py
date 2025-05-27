@@ -7,9 +7,15 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from crawl4ai_mcp import (crawl_single_page, get_available_sources, is_sitemap,
-                          is_txt, parse_sitemap, perform_rag_query,
-                          smart_crawl_url)
+from crawl4ai_mcp import (
+    crawl_single_page,
+    get_available_sources,
+    is_sitemap,
+    is_txt,
+    parse_sitemap,
+    perform_rag_query,
+    smart_crawl_url,
+)
 
 
 class TestMCPTools:

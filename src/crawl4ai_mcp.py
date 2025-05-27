@@ -18,14 +18,18 @@ from urllib.parse import urldefrag, urlparse
 from xml.etree import ElementTree
 
 import requests
-from crawl4ai import (AsyncWebCrawler, BrowserConfig, CacheMode,
-                      CrawlerRunConfig, MemoryAdaptiveDispatcher)
+from crawl4ai import (
+    AsyncWebCrawler,
+    BrowserConfig,
+    CacheMode,
+    CrawlerRunConfig,
+    MemoryAdaptiveDispatcher,
+)
 from dotenv import load_dotenv
 from mcp.server.fastmcp import Context, FastMCP
 from supabase import Client
 
-from utils import (add_documents_to_supabase, get_supabase_client,
-                   search_documents)
+from utils import add_documents_to_supabase, get_supabase_client, search_documents
 
 # Load environment variables from the project root .env file
 project_root = Path(__file__).resolve().parent.parent
