@@ -7,14 +7,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from utils import (
-    add_documents_to_supabase,
-    create_embedding,
-    create_embeddings_batch,
-    extract_section_info,
-    search_documents,
-    smart_chunk_markdown,
-)
+from utils import (add_documents_to_supabase, create_embedding,
+                   create_embeddings_batch, extract_section_info,
+                   search_documents, smart_chunk_markdown)
 
 
 class TestMarkdownProcessing:
