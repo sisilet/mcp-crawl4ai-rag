@@ -7,9 +7,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
 from utils import (add_documents_to_supabase, create_embedding,
-                   create_embeddings_batch, extract_section_info,
-                   search_documents, smart_chunk_markdown)
+                   create_embeddings_batch, search_documents)
+from crawl4ai_mcp import extract_section_info, smart_chunk_markdown
 
 
 class TestMarkdownProcessing:
@@ -29,9 +33,10 @@ class TestMarkdownProcessing:
         chunks = smart_chunk_markdown(text, chunk_size=30)
 
         # Should not break inside code blocks
-        code_chunk = next((chunk for chunk in chunks if "```" in chunk), None)
-        assert code_chunk is not None
-        assert code_chunk.count("```") % 2 == 0  # Even number of backticks
+        # Check if any chunk contains the complete code block
+        complete_code_block = "```python\ndef function():\n    pass\n```"
+        has_complete_block = any(complete_code_block in chunk for chunk in chunks)
+        assert has_complete_block or len(chunks) == 1  # Either complete block or single chunk
 
     def test_smart_chunk_markdown_paragraphs(self):
         """Test chunking respects paragraph boundaries."""
@@ -155,7 +160,12 @@ class TestSupabaseOperations:
             filter_metadata={"source": "example.com"},
         )
 
-        # Verify filter was passed to RPC call
-        call_args = mock_supabase_client.rpc.call_args[1]
-        assert "filter" in call_args
-        assert call_args["filter"] == {"source": "example.com"}
+        # Verify RPC was called with correct parameters
+        mock_supabase_client.rpc.assert_called_once_with(
+            "match_crawled_pages",
+            {
+                "query_embedding": [0.1] * 1536,
+                "match_count": 5,
+                "filter": {"source": "example.com"}
+            }
+        )
