@@ -1,17 +1,19 @@
 """
 Pytest configuration and shared fixtures for MCP server tests.
 """
+
 import asyncio
 import os
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
-from pathlib import Path
-
 # Add src to path for imports
 import sys
+from pathlib import Path
+from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from crawl4ai_mcp import FastMCP, Context, Crawl4AIContext
+from crawl4ai_mcp import Context, Crawl4AIContext, FastMCP
 from utils import get_supabase_client
 
 
@@ -26,14 +28,17 @@ def event_loop():
 @pytest.fixture
 def mock_env_vars():
     """Mock environment variables for testing."""
-    with patch.dict(os.environ, {
-        'SUPABASE_URL': 'https://test.supabase.co',
-        'SUPABASE_SERVICE_KEY': 'test-key',
-        'OPENAI_API_KEY': 'test-openai-key',
-        'HOST': '127.0.0.1',
-        'PORT': '8052',
-        'TRANSPORT': 'stdio'
-    }):
+    with patch.dict(
+        os.environ,
+        {
+            "SUPABASE_URL": "https://test.supabase.co",
+            "SUPABASE_SERVICE_KEY": "test-key",
+            "OPENAI_API_KEY": "test-openai-key",
+            "HOST": "127.0.0.1",
+            "PORT": "8052",
+            "TRANSPORT": "stdio",
+        },
+    ):
         yield
 
 
@@ -41,7 +46,9 @@ def mock_env_vars():
 def mock_supabase_client():
     """Mock Supabase client for testing."""
     mock_client = MagicMock()
-    mock_client.from_.return_value.select.return_value.not_.return_value.is_.return_value.execute.return_value.data = []
+    mock_client.from_.return_value.select.return_value.not_.return_value.is_.return_value.execute.return_value.data = (
+        []
+    )
     mock_client.rpc.return_value.execute.return_value.data = []
     return mock_client
 
@@ -76,10 +83,13 @@ def mock_context(mock_crawler, mock_supabase_client):
 @pytest.fixture
 async def mcp_server(mock_env_vars):
     """Create a test MCP server instance."""
-    with patch('src.crawl4ai_mcp.get_supabase_client'), \
-         patch('crawl4ai.AsyncWebCrawler'):
+    with (
+        patch("src.crawl4ai_mcp.get_supabase_client"),
+        patch("crawl4ai.AsyncWebCrawler"),
+    ):
         # Import here to ensure patches are applied
         from crawl4ai_mcp import mcp
+
         yield mcp
 
 
@@ -87,10 +97,10 @@ async def mcp_server(mock_env_vars):
 def sample_urls():
     """Sample URLs for testing."""
     return {
-        'regular': 'https://example.com/page',
-        'sitemap': 'https://example.com/sitemap.xml',
-        'txt_file': 'https://example.com/llms.txt',
-        'invalid': 'not-a-url'
+        "regular": "https://example.com/page",
+        "sitemap": "https://example.com/sitemap.xml",
+        "txt_file": "https://example.com/llms.txt",
+        "invalid": "not-a-url",
     }
 
 
@@ -124,7 +134,5 @@ Even more content.
 def mock_openai_response():
     """Mock OpenAI API response."""
     mock_response = MagicMock()
-    mock_response.data = [
-        MagicMock(embedding=[0.1] * 1536)
-    ]
-    return mock_response 
+    mock_response.data = [MagicMock(embedding=[0.1] * 1536)]
+    return mock_response
